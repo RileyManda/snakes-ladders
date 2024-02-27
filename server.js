@@ -3,11 +3,11 @@ const socket = require("socket.io");
 const http = require("http");
 
 const app = express();
-const PORT = 3000 || process.env.PORT;
+const PORT = 3001 || process.env.PORT;
 const server = http.createServer(app);
 
 // Set static folder
-app.use(express.static("public"));
+app.use(express.static("src"));
 
 // Socket setup
 const io = socket(server);

@@ -1,5 +1,5 @@
 // Making Connection
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect("http://localhost:3001");
 socket.emit("joined");
 
 let players = []; // All players in the game
