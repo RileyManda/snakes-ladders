@@ -11,7 +11,20 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <div class="board"></div>
+    <div class="game-container">
+      <div class="board"></div>
+      <div id="players-box">
+        <h3>Players currently online:</h3>
+        <br>
+        <table id="players-table">
+          <tr class="table-cols">
+            <th>Name</th>
+            <th>Image</th>
+            <th>Score</th>
+          </tr>
+        </table>
+      </div>
+    </div>
     <img src="images/red_piece.png" alt="" hidden="true" id="red-piece" />
     <img src="images/blue_piece.png" alt="" hidden="true" id="blue-piece" />
     <img src="images/yellow_piece.png" alt="" hidden="true" id="yellow-piece" />
@@ -30,17 +43,6 @@
         />
         <button class="btn draw-border" id="start-btn">Join</button>
       </div>
-    </div>
-    <div id="players-box">
-      <h3>Players currently online:</h3>
-      <br>
-     <table id="players-table">
-    <tr>
-      <th>Name</th>
-      <th>Image</th>
-      <th>Score</th>
-    </tr>
-  </table>
     </div>
     <div id="current-player"></div>
     <button class="btn draw-border" id="roll-button" hidden>Roll</button>
