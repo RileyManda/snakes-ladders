@@ -48,6 +48,7 @@ class Player {
     this.name = name;
     this.pos = pos;
     this.img = img;
+    this.score = 0;
   }
 
   draw() {
@@ -65,6 +66,7 @@ class Player {
   updatePos(num) {
     if (this.pos + num <= 99) {
       this.pos += num;
+      this.score += num;
       this.pos = this.isLadderOrSnake(this.pos + 1) - 1;
     }
   }
@@ -105,10 +107,12 @@ document.getElementById("start-btn").addEventListener("click", () => {
 document.getElementById("roll-button").addEventListener("click", () => {
   const num = rollDice();
   currentPlayer.updatePos(num);
+  console.log(`Dice rolled: ${num}`);
   socket.emit("rollDice", {
     num: num,
     id: currentPlayer.id,
     pos: currentPlayer.pos,
+    score: currentPlayer.score,
   });
 });
 
@@ -127,28 +131,36 @@ function drawPins() {
 
 // Listen for events
 socket.on("join", (data) => {
-  players.push(new Player(players.length, data.name, data.pos, data.img));
+  players.push(new Player(players.length, data.name, data.pos, data.img, data.score));
   drawPins();
   document.getElementById(
     "players-table"
-  ).innerHTML += `<tr><td>${data.name}</td><td><img src=${data.img} height=50 width=40></td></tr>`;
+  ).innerHTML += `<tr><td>${data.name}</td><td><img src=${data.img} height=50 width=40></td><td>${data.score}</td></tr>`;
 });
 
 socket.on("joined", (data) => {
   data.forEach((player, index) => {
-    players.push(new Player(index, player.name, player.pos, player.img));
+    players.push(new Player(index, player.name, player.pos, player.img, player.score));
     console.log(player);
     document.getElementById(
       "players-table"
-    ).innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img}></td></tr>`;
+    ).innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img}></td><td>${player.score}</td></tr>`;
   });
   drawPins();
 });
 
 socket.on("rollDice", (data, turn) => {
   players[data.id].updatePos(data.num);
+  players[data.id].score = data.score;
   document.getElementById("dice").src = `./images/dice/dice${data.num}.png`;
   drawPins();
+
+  // Update the players table
+  let table = document.getElementById("players-table");
+  table.innerHTML = "";
+  players.forEach((player) => {
+    table.innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img} height=50 width=40></td><td>${player.score}</td></tr>`;
+  });
 
   if (turn != currentPlayer.id) {
     document.getElementById("roll-button").hidden = true;
