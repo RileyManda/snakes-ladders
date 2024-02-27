@@ -16,29 +16,6 @@ const io = socket(server);
 // Players array
 let users = [];
 
-// Generate a random secret key for encryption/decryption
-const secretKey = generateSecretKey();
-
-// Function to generate a random secret key
-function generateSecretKey() {
-  return CryptoJS.lib.WordArray.random(128 / 8).toString();
-}
-
-// Function to encrypt data
-function encryptData(data, secretKey) {
-  const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
-  console.log("Data encrypted:", ciphertext);
-  return ciphertext;
-}
-
-// Function to decrypt data
-function decryptData(ciphertext, secretKey) {
-  const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
-  const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-  console.log("Data decrypted:", decryptedData);
-  return decryptedData;
-}
-
 io.on("connection", (socket) => {
   console.log("Made socket connection", socket.id);
 
@@ -52,16 +29,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("rollDice", (data) => {
-    if (Array.isArray(data)) {
-      data.forEach((item) => {
-        users[item.id].pos = item.pos;
-        users[item.id].score = item.score;
-      });
-      const turn = data.some((item) => item.num !== 6)
-        ? (data[0].id + 1) % users.length
-        : data[0].id;
-      io.sockets.emit("rollDice", data, turn);
-    }
+    // Encrypt the data before sending
+    const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+    console.log("Encrypted message:", encryptedData);
+
+    users[data.id].pos = data.pos;
+    users[data.id].score = data.score;
+    const turn = data.num != 6 ? (data.id + 1) % users.length : data.id;
+    io.sockets.emit("rollDice", encryptedData, turn);
   });
 
   socket.on("restart", () => {
@@ -69,6 +44,5 @@ io.on("connection", (socket) => {
     io.sockets.emit("restart");
   });
 });
-
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
