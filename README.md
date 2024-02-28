@@ -88,7 +88,20 @@ The project inspired by https://github.com/Soupaul/snakes-and-ladders-multiplaye
 <details>
   <summary>Socket IO Control</summary>
   <ul>
-    <li><a href="https://datasift.github.io/gitflow/IntroducingGitFlow.html">Gitflow</a></li>
+    <li><a href="https://socket.io/">SocketIO </a></li>
+  </ul>
+</details>
+
+<details>
+  <summary>CryptoJS</summary>
+  <ul>
+    <li><a href="https://www.npmjs.com/package/crypto-js">CryptoJS </a></li>
+  </ul>
+</details>
+<details>
+  <summary>Nodemon</summary>
+  <ul>
+    <li><a href="https://www.npmjs.com/package/nodemon">Nodemon </a></li>
   </ul>
 </details>
 
