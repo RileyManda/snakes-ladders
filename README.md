@@ -37,8 +37,8 @@
 <!-- PROJECT DESCRIPTION -->
 
 # <b>Snakes and Ladders Remake  📖</b><a name="about-project"></a>
-
-**Snakes and Ladders Remake**A project inspired by https://github.com/Soupaul/snakes-and-ladders-multiplayer updated with scoreboard and tailwind styling.
+This project is a real-time multiplayer game built using Express, and Socket.IO. It allows multiple players to join a game session and play simultaneously in a shared virtual environment. The game is based on the classic board game, Snakes and Ladders, where players take turns to roll a dice and move their pieces across the board. The game is won by the first player to reach the last square on the board.
+The project inspired by https://github.com/Soupaul/snakes-and-ladders-multiplayer
 <br><hr>
 
 <!-- BUILT WITH -->
