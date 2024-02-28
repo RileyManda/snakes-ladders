@@ -101,19 +101,22 @@ document.getElementById("start-btn").addEventListener("click", () => {
   document.getElementById(
     "current-player"
   ).innerHTML = `<p>Anyone can roll</p>`;
-  socket.emit("join", currentPlayer);
+  const encryptedData = encryptMessage(JSON.stringify(currentPlayer));
+  socket.emit("join", encryptedData);
 });
 
 document.getElementById("roll-button").addEventListener("click", () => {
   const num = rollDice();
   currentPlayer.updatePos(num);
   console.log(`Dice rolled: ${num}`);
-  socket.emit("rollDice", {
+  const encryptedData = encryptMessage(JSON.stringify({
     num: num,
     id: currentPlayer.id,
     pos: currentPlayer.pos,
     score: currentPlayer.score,
-  });
+    img: currentPlayer.img,
+  }));
+  socket.emit("rollDice", encryptedData);
 });
 
 function rollDice() {
@@ -129,22 +132,26 @@ function drawPins() {
   });
 }
 
+function updatePlayersTable() {
+  let table = document.getElementById("players-table");
+  table.innerHTML = "";
+  players.forEach((player) => {
+    table.innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img} height=50 width=40></td><td>${player.score}</td></tr>`;
+  });
+}
+
 // Listen for events
 socket.on("join", (data) => {
   players.push(new Player(players.length, data.name, data.pos, data.img, data.score));
   drawPins();
-  document.getElementById(
-    "players-table"
-  ).innerHTML += `<tr><td>${data.name}</td><td><img src=${data.img} height=50 width=40></td><td>${data.score}</td></tr>`;
+  updatePlayersTable();
 });
 
 socket.on("joined", (data) => {
   data.forEach((player, index) => {
     players.push(new Player(index, player.name, player.pos, player.img, player.score));
     console.log(player);
-    document.getElementById(
-      "players-table"
-    ).innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img}></td><td>${player.score}</td></tr>`;
+    updatePlayersTable();
   });
   drawPins();
 });
@@ -156,11 +163,7 @@ socket.on("rollDice", (data, turn) => {
   drawPins();
 
   // Update the players table
-  let table = document.getElementById("players-table");
-  table.innerHTML = "";
-  players.forEach((player) => {
-    table.innerHTML += `<tr><td>${player.name}</td><td><img src=${player.img} height=50 width=40></td><td>${player.score}</td></tr>`;
-  });
+  updatePlayersTable();
 
   if (turn != currentPlayer.id) {
     document.getElementById("roll-button").hidden = true;
@@ -200,3 +203,9 @@ document.getElementById("restart-btn").addEventListener("click", () => {
 socket.on("restart", () => {
   window.location.reload();
 });
+
+// Function to encrypt message
+function encryptMessage(message) {
+  const mysecretencryptionkey = 'wedrjjshhfbu473hfvdhj';
+  return CryptoJS.AES.encrypt(message, mysecretencryptionkey).toString();
+}
