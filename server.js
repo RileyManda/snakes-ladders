@@ -2,9 +2,11 @@ const express = require("express");
 const socket = require("socket.io");
 const http = require("http");
 const CryptoJS = require("crypto-js");
+require('dotenv').config();
 
 const app = express();
-const PORT = 3001 || process.env.PORT;
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || 'localhost';
 const server = http.createServer(app);
 
 // Set static folder
@@ -15,6 +17,9 @@ const io = socket(server);
 
 // Players array
 let users = [];
+
+// secret key from env
+const secretKey = process.env.SECRET_KEY;
 
 io.on("connection", (socket) => {
   console.log("Made socket connection", socket.id);
@@ -32,7 +37,7 @@ io.on("connection", (socket) => {
     // Encrypt the data before sending
     const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
     console.log("Encrypted message:", encryptedData);
-
+    socket.emit('encryptedMessage', encryptedData); // Emit encrypted message for testing purpposes
     users[data.id].pos = data.pos;
     users[data.id].score = data.score;
     const turn = data.num != 6 ? (data.id + 1) % users.length : data.id;
@@ -45,4 +50,4 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, HOST, () => console.log(`Server running on ${HOST}:${PORT}`));
