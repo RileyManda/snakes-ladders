@@ -44,7 +44,7 @@ header {
 .board {
   position: absolute;
   transform: translate(-15%, 0);
-  top: 8%;
+  top: 10%;
   left: 10%;
   height: 90vh;
   width: 45%;
