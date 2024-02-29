@@ -2,6 +2,7 @@ const express = require("express");
 const socket = require("socket.io");
 const http = require("http");
 const CryptoJS = require("crypto-js");
+const { MongoClient } = require('mongodb');
 
 const app = express();
 const PORT = 3001 || process.env.PORT;
@@ -15,6 +16,24 @@ const io = socket(server);
 
 // Players array
 let users = [];
+
+// MongoDB connection URI
+const uri = "mongodb+srv://rileymanda0:Nbti6n2TM8HftQhZ@cluster0.mnkokgz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+// MongoClient
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+async function connectToMongoDB() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err);
+  }
+}
+
+connectToMongoDB();
+
 
 io.on("connection", (socket) => {
   console.log("Made socket connection", socket.id);
