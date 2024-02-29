@@ -20,7 +20,7 @@ const uri = "mongodb+srv://rileymanda0:Nbti6n2TM8HftQhZ@cluster0.mnkokgz.mongodb
 // MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-let users = []; // Store session data in memory
+let users = [];
 
 async function connectToMongoDB() {
   try {
@@ -36,8 +36,8 @@ connectToMongoDB();
 // Function to fetch session data from MongoDB
 async function getSessionData() {
   try {
-    const database = client.db("cluster0");
-    const collection = database.collection("sessions");
+    const database = client.db("snakesladders");
+    const collection = database.collection("gameroom");
     const sessionData = await collection.findOne({ session_id: "1" });
     return sessionData ? sessionData.users : [];
   } catch (err) {
@@ -49,8 +49,8 @@ async function getSessionData() {
 // Function to update session data in MongoDB
 async function updateSessionData(usersData) {
   try {
-    const database = client.db("cluster0");
-    const collection = database.collection("sessions");
+    const database = client.db("snakesladders");
+    const collection = database.collection("gameroom");
     await collection.updateOne(
       { session_id: "1" },
       { $set: { users: usersData } },
