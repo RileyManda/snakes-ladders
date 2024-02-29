@@ -15,8 +15,7 @@ app.use(express.static("src"));
 const io = socket(server);
 
 // MongoDB connection URI
-const uri = "mongodb+srv://rileymanda0:Nbti6n2TM8HftQhZ@cluster0.mnkokgz.mongodb.net/cluster0?retryWrites=true&w=majority";
-
+const uri = process.env.MONGODB_URI;
 // MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
