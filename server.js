@@ -14,14 +14,13 @@ app.use(express.static("src"));
 // Socket setup
 const io = socket(server);
 
-// Players array
-let users = [];
-
 // MongoDB connection URI
-const uri = "mongodb+srv://rileymanda0:Nbti6n2TM8HftQhZ@cluster0.mnkokgz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = "mongodb+srv://rileymanda0:Nbti6n2TM8HftQhZ@cluster0.mnkokgz.mongodb.net/cluster0?retryWrites=true&w=majority";
 
 // MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+let users = []; // Store session data in memory
 
 async function connectToMongoDB() {
   try {
@@ -34,6 +33,41 @@ async function connectToMongoDB() {
 
 connectToMongoDB();
 
+// Function to fetch session data from MongoDB
+async function getSessionData() {
+  try {
+    const database = client.db("cluster0");
+    const collection = database.collection("sessions");
+    const sessionData = await collection.findOne({ session_id: "1" });
+    return sessionData ? sessionData.users : [];
+  } catch (err) {
+    console.error("Error fetching session data:", err);
+    return [];
+  }
+}
+
+// Function to update session data in MongoDB
+async function updateSessionData(usersData) {
+  try {
+    const database = client.db("cluster0");
+    const collection = database.collection("sessions");
+    await collection.updateOne(
+      { session_id: "1" },
+      { $set: { users: usersData } },
+      { upsert: true }
+    );
+    console.log("Session data updated successfully");
+  } catch (err) {
+    console.error("Error updating session data:", err);
+  }
+}
+
+// Load session data from MongoDB when the server starts
+getSessionData().then((data) => {
+  users = data;
+}).catch((err) => {
+  console.error("Error loading session data:", err);
+});
 
 io.on("connection", (socket) => {
   console.log("Made socket connection", socket.id);
@@ -44,6 +78,8 @@ io.on("connection", (socket) => {
     const data = JSON.parse(decryptedData);
     users.push(data);
     io.sockets.emit("join", data);
+    // Update session data in MongoDB
+    updateSessionData(users);
   });
 
   socket.on("joined", () => {
@@ -58,11 +94,15 @@ io.on("connection", (socket) => {
     users[data.id].score = data.score;
     const turn = data.num != 6 ? (data.id + 1) % users.length : data.id;
     io.sockets.emit("rollDice", data, turn);
+    // Update session data in MongoDB
+    updateSessionData(users);
   });
 
   socket.on("restart", () => {
     users = [];
     io.sockets.emit("restart");
+    // Update session data in MongoDB
+    updateSessionData(users);
   });
 });
 
