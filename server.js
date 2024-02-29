@@ -23,6 +23,7 @@ const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 let users = [];
+let sessionId;
 
 async function connectToMongoDB() {
   try {
@@ -48,28 +49,39 @@ async function getSessionData() {
   }
 }
 
+// generate session id
+function generateSessionId() {
+  return Math.random().toString(36).substring(2, 10);
+}
+
 // Function to update session data in MongoDB
-async function updateSessionData(usersData) {
+async function updateSessionData(sessionId, usersData) {
   try {
     const database = client.db("snakesladders");
     const collection = database.collection("gameroom");
     await collection.updateOne(
-      { session_id: "1" },
-      { $set: { users: usersData } },
+      { session_id: sessionId },
+      { $set: { session_id: sessionId, users: usersData } },
       { upsert: true }
     );
-    console.log("Session data updated successfully");
+    console.log(`Session data for session ${sessionId} updated successfully`);
   } catch (err) {
     console.error("Error updating session data:", err);
   }
 }
 
 // Load session data from MongoDB when the server starts
-getSessionData().then((data) => {
-  users = data;
-}).catch((err) => {
-  console.error("Error loading session data:", err);
-});
+async function getSessionData(sessionId) {
+  try {
+    const database = client.db("snakesladders");
+    const collection = database.collection("gameroom");
+    const sessionData = await collection.findOne({ session_id: sessionId });
+    return sessionData ? sessionData.users : [];
+  } catch (err) {
+    console.error("Error fetching session data:", err);
+    return [];
+  }
+}
 
 io.on("connection", (socket) => {
   console.log("Made socket connection", socket.id);
@@ -97,15 +109,31 @@ io.on("connection", (socket) => {
     const turn = data.num != 6 ? (data.id + 1) % users.length : data.id;
     io.sockets.emit("rollDice", data, turn);
     // Update session data in MongoDB
-    updateSessionData(users);
+    updateSessionData(sessionId, users);
   });
 
   socket.on("restart", () => {
     users = [];
     io.sockets.emit("restart");
     // Update session data in MongoDB
-    updateSessionData(users);
+    updateSessionData(sessionId, users);
   });
+});
+
+app.get("/scoreboard", async (req, res) => {
+  try {
+    const database = client.db("snakesladders");
+    const collection = database.collection("gameroom");
+    const sessionData = await collection.findOne({ session_id: "1" });
+    if (sessionData) {
+      res.json(sessionData.users);
+    } else {
+      res.status(404).json({ message: "No scoreboard data found" });
+    }
+  } catch (err) {
+    console.error("Error fetching scoreboard data:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -209,3 +209,32 @@ function encryptMessage(message) {
   const mysecretencryptionkey = 'wedrjjshhfbu473hfvdhj';
   return CryptoJS.AES.encrypt(message, mysecretencryptionkey).toString();
 }
+
+document.getElementById("show-scoreboard-btn").addEventListener("click", () => {
+  fetch("/scoreboard")
+    .then((response) => response.json())
+    .then((data) => {
+      updateScoreboardModal(data);
+      document.getElementById("scoreboard-modal").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error fetching scoreboard data:", error);
+    });
+});
+
+function updateScoreboardModal(data) {
+  // Sort players by score in descending order
+  data.sort((a, b) => b.score - a.score);
+
+  let scoreboardTable = document.getElementById("scoreboard-table");
+  scoreboardTable.innerHTML = "";
+
+  // Display player name and score in the modal
+  data.forEach((player, index) => {
+    scoreboardTable.innerHTML += `<tr><td>${index + 1}</td><td>${player.name}</td><td>${player.score}</td></tr>`;
+  });
+}
+
+
+
+
