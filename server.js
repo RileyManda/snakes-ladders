@@ -3,6 +3,8 @@ const socket = require("socket.io");
 const http = require("http");
 const CryptoJS = require("crypto-js");
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
+
 
 const app = express();
 const PORT = 3001 || process.env.PORT;
@@ -16,6 +18,7 @@ const io = socket(server);
 
 // MongoDB connection URI
 const uri = process.env.MONGODB_URI;
+
 // MongoClient
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
