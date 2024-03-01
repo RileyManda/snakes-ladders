@@ -250,6 +250,10 @@ function updateScoreboardModal(data) {
   });
 }
 
+function closeScoreboardModal() {
+  document.getElementById("scoreboard-modal").style.display = "none";
+}
+
 
 
 
