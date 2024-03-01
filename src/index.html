@@ -22,11 +22,14 @@
             <div class="form-group">
                 <input type="text" class="form-input" id="name" placeholder="Your name" required />
                 <button class="btn draw-border" id="start-btn">Join</button>
+                <button id="show-scoreboard-btn">Show Scoreboard</button>
+
             </div>
             <div id="players-box">
                 <h3>Players currently online:</h3>
                 <br>
                 <table id="players-table">
+                     <h5>Scoreboard:</h5>
                     <tr>
                         <th></th>
                         <th>Player</th>
@@ -42,6 +45,18 @@
         </div>
         <button class="btn draw-border" id="restart-btn" hidden>Restart</button>
         <canvas id="canvas"></canvas>
+        <!-- Scoreboard Modal -->
+<div id="scoreboard-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('scoreboard-modal').style.display = 'none'">&times;</span>
+    <h2>Scoreboard</h2>
+    <table id="scoreboard-table">
+      <tr>
+        <th>Player Name</th>
+        <th>Wins</th>
+      </tr>
+    </table>
+  </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/index.js"></script>
