@@ -124,14 +124,11 @@ app.get("/scoreboard", async (req, res) => {
   try {
     const database = client.db("snakesladders");
     const collection = database.collection("gameroom");
-    const sessionData = await collection.findOne({ session_id: "1" });
-    if (sessionData) {
-      res.json(sessionData.users);
-    } else {
-      res.status(404).json({ message: "No scoreboard data found" });
-    }
-  } catch (err) {
-    console.error("Error fetching scoreboard data:", err);
+    const allSessions = await collection.find().toArray();
+    const scoreboardData = allSessions.flatMap(session => session.users);
+    res.json(scoreboardData);
+  } catch (error) {
+    console.error("Error fetching scoreboard data:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
