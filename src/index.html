@@ -33,7 +33,7 @@
                     <tr>
                         <th></th>
                         <th>Player</th>
-                        <th>Score</th>
+                        <th>Wins</th>
                     </tr>
                 </table>
             </div>
@@ -48,16 +48,17 @@
         <!-- Scoreboard Modal -->
 <div id="scoreboard-modal" class="modal">
   <div class="modal-content">
-    <span class="close" onclick="document.getElementById('scoreboard-modal').style.display = 'none'">&times;</span>
+    <span class="close" onclick="closeScoreboardModal()">&times;</span>
     <h2>Scoreboard</h2>
     <table id="scoreboard-table">
       <tr>
-        <th>Player Name</th>
-        <th>Wins</th>
+        <th>Player</th>
+        <th>Score</th>
       </tr>
     </table>
   </div>
-    </div>
+</div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
