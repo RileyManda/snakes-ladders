@@ -160,7 +160,7 @@ In order to run this project you need:
 Clone this repository to your desired folder:<br>
 ```sh
 cd my-folder
-git clone https://github.com/RileyManda/.git
+git clone https://github.com/RileyManda/snakes-ladders
 
   ```
   - Navigate to the folder
@@ -169,7 +169,7 @@ cd my-folder
 ```
 - Checkout the branch
 ```
-git checkout main
+git checkout dev
 ```
 <br><hr>
 
@@ -179,7 +179,7 @@ git checkout main
 Install all dependencies:
 
 ```sh
-    npm install
+    yarn
 ```
 <br><hr>
 
@@ -188,9 +188,8 @@ Install all dependencies:
 
 To run the project, follow these instructions:
 
-- You have to clone this repo to your local machine.
 ```
-git clone https://github.com/RileyManda/snakes-ladders
+yarn start
 ```
 
 <!-- TESTS -->
