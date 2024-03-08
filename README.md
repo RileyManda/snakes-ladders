@@ -123,7 +123,7 @@ The project inspired by https://github.com/Soupaul/snakes-and-ladders-multiplaye
 ## <b>Live Demo 🚀</b><a name="live-demo"></a>
 
 
-[Live Demo Link](https://)
+No Live demo available
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <hr>
@@ -131,7 +131,7 @@ The project inspired by https://github.com/Soupaul/snakes-and-ladders-multiplaye
 <!-- PROJECT DEMO -->
 ## <b>Project Demo 🏁</b><a name="project-demo"></a>
 
-[Project Demo](https://)
+No project demo available
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <hr>
@@ -190,7 +190,7 @@ To run the project, follow these instructions:
 
 - You have to clone this repo to your local machine.
 ```
-git clone https://github.com/RileyManda/SciMovies.git
+git clone https://github.com/RileyManda/snakes-ladders
 ```
 
 <!-- TESTS -->
